@@ -1,0 +1,4 @@
+failure_type,count,pct
+NO_FAILURE,27,77.14
+TOOL_CALL_FAILED,5,14.29
+LOOP_DETECTED,3,8.57

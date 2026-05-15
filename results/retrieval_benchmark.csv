@@ -1,0 +1,11 @@
+id,question,bm25_p@5,bm25_r@5,dense_p@5,dense_r@5,hybrid_p@5,hybrid_r@5
+q01,BERTurk ne zaman yayınlandı?,0.2,1.0,0.2,1.0,0.2,1.0
+q02,AeroGuard sisteminin doğruluk oranı nedir?,0.2,1.0,0.2,1.0,0.2,1.0
+q03,AeroGuard hangi havalimanlarında kullanılıyor?,0.2,1.0,0.2,1.0,0.2,1.0
+q04,Attention mekanizması transformer mimarisinde nası,0.2,1.0,0.0,0.0,0.2,1.0
+q05,THQuAD veri seti ne için kullanılır?,0.0,0.0,0.2,1.0,0.2,1.0
+q06,LangChain nedir ve ne işe yarar?,0.4,1.0,0.4,1.0,0.4,1.0
+q07,LangGraph state graph nasıl tanımlanır?,0.2,1.0,0.0,0.0,0.2,1.0
+q08,Multimodal dil modelleri görüntü ve metni nasıl bi,0.0,0.0,0.8,1.0,0.8,1.0
+q09,DSL ve HFC erişim ağları arasındaki fark nedir?,1.0,1.0,1.0,1.0,1.0,1.0
+q10,Yapay zeka eğitiminde fine-tuning nedir?,0.2,1.0,0.8,1.0,0.4,1.0
