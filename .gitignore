@@ -1,0 +1,26 @@
+# Environment
+.env
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database
+*.db
+storage/chroma/
+
+# Data
+data/raw/
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Results (keep CSVs and PNGs, ignore large outputs)
+results/*.db
