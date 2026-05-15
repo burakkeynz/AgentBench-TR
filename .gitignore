@@ -24,3 +24,5 @@ notebooks/.ipynb_checkpoints/
 
 # Results (keep CSVs and PNGs, ignore large outputs)
 results/*.db
+agentbench_tr.egg-info/
+settings.json
