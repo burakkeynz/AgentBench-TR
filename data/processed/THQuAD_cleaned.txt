@@ -1,0 +1,407 @@
+THQuAD: Turkish Historic Question Answering
+Dataset for Reading Comprehension
+ 
+ 
+ 
+ 
+ 
+ 
+
+Abstract Question answering(QA) is a field in natural lan-
+guage processing and information retrieval, it aims to give
+answers to the questions using natural language. In this paper,
+we present the Turkish question answering dataset, which is
+THQuAD and baseline results with contextualized word embed-
+dings.THQuADconsistsoftwodifferentdatasetsoneofthemis
+TQuad on Turkish Islamic Science history within the scope of
+Teknofest 2018 Artificial Intelligence competition , the second
+dataset on Ottoman history within the scope of Teknofest 2020
+ Dog alDilI s lemeYarıs ması preparedbyus.THQuADisaread-
+ingcomprehensiondataset,consistingofquestions,answers,and
+passages.Ourobjectiveistogiveananswertoaspecificquestion
+by understanding the passage and extracting the answer from
+thispassage.Wegeneratecontextualizedwordembeddingsfrom
+pre-trained Turkish Bert, Electra, Albert language models after
+fine-tuning on different hyperparameters with neural networks.
+IndexTerms questionanswering,informationretrieval,natu-
+ral language understanding, deep learning, contextualized word Fig.1. Question-answerpairsforasamplepassageintheTHQuADdataset.
+embeddings
+This paper is organized as follows. Section 2 describes the
+I. INTRODUCTION
+related work on question answering approaches and related
+There can be different question answering challenges such Turkish question answering based research works. Section 3
+as multiple-choice question answering, reading comprehen- explainsourdataset.Section4isaboutourmethodweexplain
+sion, open-domain question answering. Reading comprehen- language models and how they trained with Turkish raw text
+sionquestionansweringaimstoreadandunderstandpassages data. Section 5 includes evaluation and experimental results.
+and answer questions about the passage. In this work, we Section6aboutdiscussionforquestionsandresultsindataset.
+preparedaTurkishdatasetforreadingcomprehensionquestion Section 7 concludes the paper and presents the future work.
+answering.Ourdatasetcontainspassagesandquestion-answer
+pairs. Answer of these questions can be generated from the II. RELATEDWORK
+given passage. A sample part of the dataset is seen in Fig. 1. There are different approaches on question answering.
+THQuAD dataset is created using Turkish Wikipedia arti- Gu ngo r and Derici 2 worked on a closed domain for fac-
+cles. In this work we use subsections of Wikipedia articles toid question answering. They created two different pipelines
+related with Ottoman Empire as passage. According to the which are question analysis and information retrieval. With
+passage we extract questions and answers. this pipeline, they used Hidden Markov Models and Rule-
+based question classifiers to answer the question. Er and
+In our work, we used transformer based neural networks
+C ic ekli 3 proposedasolutiononasearchengineviaagiven
+ 1 . With transformer architecture, we aimed to obtain more
+query string. Firstly, the question is classified and does verb
+powerful representations with self-attention instead of RNN
+multiplexing. Then a related answer is given to the given
+variants and handle long-range dependencies. We use exact
+analyzedquestion.C elebiet.al.usednamedentityrecognition
+match and F1 score to evaluate our results.
+
+3109559.1202.80725KMBU 9011.01
+:IOD
+ 
+EEEI
+1202 
+00.13 12 5-8092-4566-1-879
+ 
+)KMBU(
+gnireenignE
+dna
+ecneicS
+retupmoC
+no
+ecnerefnoC
+lanoitanretnI
+ht6
+1202
+978-1-6654-2908-5 21 31.00 2021 IEEE
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.
+
+and pattern matching to categorize questions and selects the B. Creation of Question-Answer Pairs
+correctanswertothegivenquestionusingadocumentdataset
+After the collection of the passages, we manually create
+with a new approach to rank similar documents 4 . There are
+questions and answers according to each passage on a spe-
+some recent researches for reading comprehension in English,
+cific Wikipedia page. In questions we ask to system to give
+one of them is called SQuAD (Stanford Question Answering
+answer such as date, place, organization, cardinal, country
+Dataset) 5 proposed a dataset containing multi-domain ar-
+etc. In addition, we have different questions which have more
+ticles collected from Wikipedia. Questions and answers are
+complex answers such as relationship between two different
+generated manually from articles. Authors create baselines
+entity,definitionofentity,consequencesofaneventetc.After
+using logistic regression and sliding window techniques and
+the creation of questions and answers, we manually extract
+evaluateresultswithF1scoreandexactmatchmetrics.After2
+start and end index of answer in passage.
+yearstheypublishedanotherwork 6 toidentifyunanswerable
+questions and enhanced baseline results with neural systems IV. METHOD
+such as ELMo 7 . Gemirter and Goularas 8 proposed a A. Technical Architecture
+solution using transformer architecture on another Reading
+Comprehensiondatasetbasedonbankingdomainbyapplying
+machine translation to use English original SQUAD dataset.
+III. DATASET
+Our dataset contains 841 titles, 2701 passages and 15554
+questionsandanswers.QuestionstypesmostlylikeW Hques-
+tions. W H questions are questions starting with WH-words
+includingwhat,when,where,who,whom,which,whose,why
+and how. Dataset has 2 two different domains as Ottoman
+History and Turkish Islamic Science history. Dataset mostly
+contains passages about sultans, scientists, wars and treaties.
+We use Turkish Wikipedia to create our created dataset then
+merged it with Turkish Islamic Science history dataset1.
+Our own dataset there are different periods from Ottoman
+history collected automatically and labeled manually. There
+aredifferentsectionsinthedataset.Titlesectionindicatescon-
+text stopic.Titlecontainsparagraphsections.Everyparagraph
+sectioncontainscontextandquestion-answersections.Context
+section contains a passage for related title to give information
+tothereader.Everyquestionanswersectioncontainsquestion,
+idandanswers.Onequestioncanhavemultipleanswers.Each
+answer section indicates answer text and index of answer Fig.2. ArchitectureofSystem
+in the passage. We use context, question text, answer text,
+answer start index and answer end index to train and test on In Figure 2, we tried to show how the system works. If we
+transformer based neural network. talk about the working principle, you first give passages to
+the system and enter your question related to the passages
+you give. The steps that occur after entering the passages
+A. Collection of Passages
+and question are Natural Language Pipeline, Language Model
+In this work, we use web scraping to collect passages and Answer Extraction respectively. First, the passages and
+about Ottoman Empire. We collect passages from different questionsentencegiventothesystemintheNaturalLanguage
+periods in Ottoman Empire such as Rise(1299-1451), Expan- Pipeline are first parsed and then tokenized. Tokenization
+sionandPeak(1451,1579),StagnationandReform(1579-1792) refers to a word or a morpheme in the sentence. The task
+and Disintegration(1792-1922). Passages were collected from of tokenization is to split the raw text into small chunks. In
+sultans,wifesofsultans,warsandtreatiesonWikipediapages. this way, it helps to understand the meaning between words
+We used bs42 library to get HTML of the page and parse and helps to develop NLP models. We can briefly define
+accordingtoHTMLtagstoobtainpassages.Accordingtoeach the tokenizer as the process of separating each word that
+Wikipediapage,welabeledeachpassagewithWikipediapage makes up a whole sentence. Then this data becomes input
+name. to the language models we use. Language modeling (LM)
+is the use of various statistical and probabilistic techniques
+1 to determine the probability of a given sequence of words
+2 occurring in a sentence. The input coming to the language
+
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.
+
+modelgoesthroughthenecessarystepsaccordingtothemodel model reserves them with a special token ( SEP ). Second,
+here. Language models we use are BERT, ELECTRA and themodeladdsalearnedinsertionthatindicateswhethereach
+ALBERT. We are going to explain how the models work token belongs to sentence A or sentence B.
+and what stages they went through in Language Models
+b) Pre-TrainingBERT: Unlikethetraditionalleft-to-right
+subsection. The outputs from the language model come to
+or right-to-left approach, BERT paper proposes two unsuper-
+the Answer Extraction phase. In the Answer Extraction phase
+visedtaskstopre-traintheBERTmodel.Thesetasksarecalled
+neural network do prediction to find start and end index of
+Masked LM and Next Sentence Prediction (NSP). In masked
+answer span from passages. After that, the system returns the
+language modeling(MLM), BERT mask randomly selected
+answer span from the passage using start and end index.
+tokens from the sentence given as input and then try to guess
+After giving the question and the paragraph to the system,
+it. Next sentence prediction(NSP) used in question answering
+we embed the previously trained model. In this part, we ac-
+(QA)andnaturallanguageinferenceisbasedonunderstanding
+tually do transfer learning with transformed based pre-trained
+the semantic relationship between two sentences.
+language models to obtain contextualized word embeddings.
+c) Fine-Tuning BERT: Fine-tuning can be called simple,
+To briefly describe transfer learning, it is the use of a deep
+as it allows BERT to model many downstream tasks, whether
+learning model trained on a huge dataset for similar tasks on
+singletextortextpairs,bychangingtheappropriateinputsand
+different dataset.
+outputs. We attach task-specific inputs and outputs to BERT
+B. Language Models and fine-tune all parameters end-to-end. Fine-tuning uses less
+1) BERT: BERT model, which is formed in the initials of power compared to pre-training.
+the expression Bidirectional Encoder Representations from 2) ELECTRA: ELECTRA consists of the initials of the
+Transformers 9 , is a natural language processing technique words Efficiently Learning an Encoder that Classifies Token
+thatusesartificialintelligenceandmachinelearningtechnolo- Replacements Accurately 10 . In ELECTRA, instead of
+gies together. The BERT model consists of two steps, pre- masking the input, it distorts it by replacing some symbols
+training and fine-tuning. In the pre-training part, the model is with reasonable alternatives sampled from a small generator
+trainedonunlabeleddata.Infine-tuningtheBERTmodeluses network then, instead of training a model that predicts the
+for NLP downstream tasks such as named entity recognition, originalidentitiesofthebrokentokens,ittrainsadiscriminator
+question answering etc. model that predicts whether each token in the broken input is
+replacedwithageneratorinstance.Experimentsshowthatthis
+newpre-trainingtaskismoreefficientthanMLM.ELECTRA
+uses WordPiece tokenizer 11 like the BERT model.
+Fig.3. BERTmodelforquestionansweringexample.Source:Adaptedfrom
+ 9 
+Fig.5. RepresentationofElectraModel.Source:Adaptedfrom 10 
+a) Pre-Training ELECTRA: ELECTRA uses a new pre-
+training task called replaced token detection (RTD) that trains
+a bidirectional model (like MLM) while learning from input
+locations (like LM). As shown in Figure 5, there are 2
+neural networks in proposed model, namely generator and
+discriminator. System uses input words and want to make
+ MASK by choosing them randomly. These words entering
+Fig.4. Representationofinput output.Source:Adaptedfrom 9 
+the generator are not in the form of MASK , but change the
+input to the discriminator. The discriminator in ELECTRA is
+a) BERT Model Architecture: Figure 4 tells us what
+tryingtoguesswhethertheinputhasbeenchangedornot.The
+processestheinputisgoingthrough.TheBERTalgorithmuses
+generator works in ELECTRA, then the discriminator works.
+WordPiece embeddings, which contains 30,000 token words.
+There is no such return loss value from the discriminator to
+The first token of each sequence is always specified as a
+the generator.
+special classification symbol. It expresses with this symbol
+as ( CLS ). Sentence pairs are packaged together in a single 3) ALBERT: After the BERT model came out, ALBERT
+string. Model differentiate sentences in two ways. First, the A Lite BERT for Self-supervised Learning of Language
+Representation 12 was created for the development of the
+
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.
+
+model. Based on 12 NLP tasks including SQuAD, it gives TABLEI
+better performance ALBERT rather than BERT. ALBERT HYPERPARAMETERSINALBERT
+is architecturally similar to BERT in terms of transformer
+Epoch SeqLength LearningRate BatchSize
+encoder. However, the authors of ALBERT made 3 important
+ALBERT,Uncased1 5 512 3e-5 16
+contributions to the BERT model: Factorized embedding pa-
+rameterization, Cross-layer parameter sharing, Inter-sentence
+coherence loss.
+TABLEII
+4) Language Models for Turkish: We explained in detail HYPERPARAMETERSINBERT
+how BERT, ELECTRA and ALBERT work for the English
+Epoch SeqLength LearningRate BatchSize
+language in Language Models subsection. In this section, we
+BERT,Cased1 3 256 3e-5 16
+will explain how these 3 models are organized for Turkish. BERT,Cased2 3 384 3e-5 16
+BERT,Cased3 3 512 3e-5 16
+a) BERT: The current version of the BERT model for
+BERT,Cased4 5 256 3e-5 16
+Turkish is a filtered and sentence split version of the Turkish BERT,Cased5 5 384 3e-5 16
+OSCAR corpus, a recent Wikipedia transcript, trained on BERT,Cased6 5 512 3e-5 16
+various OPUS corpuses. The size of the final training corpus BERT,Uncased7 3 512 3e-5 16
+is 35GB and 44,04,976,662 tokens. Studies have been made
+in some areas for PoS and NER tagging 14 .
+b) ELECTRA: FortheELECTRAmodel,bothsmalland TrainBatchSize:BatchsizeperGPU TPUcore CPU
+basicELECTRAmodelsweretrainedandinternalandexternal for training
+evaluationsweremadefor1Msteps.Externalevaluationshave As seen in Tables I, II, III. we carried out our training in 3
+also been made for PoS labeling and NER. The same dataset different models with different hyperparameters. We handled
+was used in the study conducted for Turkish in BERT. 7 different cases in the BERT model and 3 different cases in
+c) ALBERT: ALBERT s Based (uncased) model was ELECTRA. In these cases, we tried to find the best result by
+made for Turkish. This model has 12 repeating coding layers hyperparameter fine-tuning in the epoch numbers, maximum
+and768hiddenlayersizesandhasbeentrainedinanunlabeled sequence length and train batch size. In ALBERT, we made
+Turkish dataset. Dataset collected for training includes a total an evaluation based on only one case
+of 40 GB of raw Turkish train sets. These are collected from We evaluated our results in Table IV. When we look
+blog posts, newspapers, Twitter, articles, and media such as at the F1 and exact match evaluation criteria, we see that
+Wikipedia. ELECTRA1 gives the best result. We can see from Table IV.
+that we got the second best score from BERT3 and the third
+V. EXPERIMENTSANDRESULTS best score from BERT6.
+In this section, we will compare the results of our data
+that we work on 3 different models. We evaluate the results VI. DISCUSSION
+by considering the F1 score and exact match among the The subject matter in this article is question-answering
+benchmark metrics. We ran our code in the Google Colab systems, as we mentioned in our study. There is a SQuAD
+environment. study that we can take as a reference and compare this type
+F1 Score: This metric measures the average overlap of study. This study was conducted by Stanford University.
+between the prediction and ground truth answer. We treat the We will compare our work with the work done by Stanford
+prediction and ground truth as bags of tokens and compute University in three different ways. First, we will compare the
+their F1. We take the maximum F1 over all of the ground datasets we use. The second part, which we will compare,
+truth answers for a given question, and then average over all will be about the distribution of the questions in the datasets.
+of the questions. Finally, we will compare our results.
+Exact Match: This metric measures the percentage of
+As we can see in Table V, there is a significant nu-
+predictions that match any one of the ground truth answers
+merical difference between the dataset we have created and
+exactly. First of all, we will examine the number of epochs,
+the SQuAD dataset, especially in the question-answer part.
+maximumsequencelength,learningrateandtrainbatchsizein
+SQuAD 2.0 dataset has been prepared by obtaining from
+BERT, ALBERT and ELECTRA. If we briefly describe these
+articles taken on English Wikipedia. The SQuAD dataset has
+parameters used,
+been prepared for the English question and answer system. In
+Epochs: In terms of artificial neural networks, an epoch
+Turkish, such a dataset preparation was previously prepared
+refers to one cycle through the full training dataset.
+withinthescopeoftheTeknoFestcompetition,andinaddition
+Maximum Sequence Length: The maximum total
+to this study, we prepared the dataset within the scope of
+input sequence length after tokenization.
+the same competition. Such studies in Turkish have been
+Learning Rate: The learning rate is a tuning parameter done once outside of us, so we have an insufficient dataset.
+in an optimization algorithm that determines the step size However, as such studies increase, the data we have will
+at each iteration while moving toward a minimum of a loss increase and we think that we can obtain a dataset like
+function.
+
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.
+
+TABLEIII TABLEVI
+HYPERPARAMETERSINELECTRA COMPARISONOFQUESTIONWORDS
+QuestionWords THQuAD SQuAD2.0
+Epoch SeqLength LearningRate BatchSize Kim-Who 1,072 18,390
+ELECTRA,Cased1 5 512 3e-5 16 Ne-What 2,193 82,858
+ELECTRA,Cased2 3 512 3e-5 16 Nezaman-When 960 13,908
+ELECTRA,Cased3 3 384 3e-5 16 Hangi-Which 3,916 18,842
+Neden-Why 328 2,261
+Nerede-Where 917 7,665
+SQuAD. Secondly, if we examine the question distributions
+in datasets. TABLEVII
+COMPARISONOFRESULTS
+In Table VI, we tried to compare the number of questions
+bothinourdataandintheSQuADdataset.Wedidnotspecify OurResults SQuAD2.0Results
+all the questions in the dataset in the table instead, we added ExactMatch F1-Score ExactMatch F1-Score
+ELECTRA 63.08270 81.55487 88.716 91.365
+as much as we can refer to the table. Since our dataset is
+BERT 62.63650 81.19225 84.328 91.281
+prepared for Turkish and the SQuAD dataset is also prepared ALBERT 48.90795 69.91283 88.107 90.902
+forEnglish,wehavewrittenthecorrespondingquestionwords
+intwolanguagesinthetable.IfweexamineTableVI,wesee
+that there is a problem in the distribution of questions in our IV. in the Experiment section. SQuAD 2.0 results reflect the
+data. Neden questionsare328inourdataset,butinSQuAD results of the models we mentioned as single models. If we
+datasetthereare2,261 Why questionattachments.Although look at the results carefully, when we compare the results we
+the Why questionsuffixislessinSQuAD,whenwecompare obtained with the results of SQuAD 2.0, there is a significant
+it with our dataset, we see that it is quite a lot. According differencebetweentheF1scores.Althoughthereisnoserious
+to the table, the most common question attachment in our difference between Exact Matches in BERT and ELECTRA,
+dataset Ne question attachment was found 2,193 times, but thereisasignificantdifferenceinALBERTresults.Thedataset
+the What questionattachmentwasfound82,858timesinthe used in training language models for Turkish is the same in
+SQuADdataset.Inthiscase,weencountertheproblemofnot BERT and ELECTRA, but the dataset used in ALBERT is
+beingabletolearnduetodatawhilewetrainourmodel.Since different.AnothercaseisthatSentencePiecetokenization 13 
+thequestionof Neden isnotenoughinourdata,itisthought is used in ALBERT. To the best of our knowledge, we think
+that when the system is tested, it may answer the questions that the difference between the results obtained is that the
+with the Neden question suffix incorrectly and therefore it number of data in our dataset is less than SQuAD 2.0 and the
+causes a decrease. disproportionbetweenthequestiondistributionsinourdataset.
+InTableVII,wewrotethebestresultswegotinOurResults
+VII. CONCLUSIONANDFUTUREWORK
+sectioninthetable.YoucanseemoredetailedresultsinTable
+In this paper, firstly we explain question-answering in
+detail and related work about question answering. Secondly,
+TABLEIV we introduce our dataset and explain attributes. Thirdly we
+RESULTSOFOURMODELS introduce language models and Turkish language models.
+Model F1 ExactMatch Finally,wepresentourexperimentsonthedatasetandquestion
+ELECTRA,Cased1 81.55487 63.08270 analysis. As future work, we are planning be extend the
+ELECTRA,Cased2 80.74756 61.23244 datasetwithdifferenttopicssuchassociology,biology,etc.In
+ELECTRA,Cased3 80.11426 60.60842
+literature, different Bert-variants developed to reduce training
+BERT1 79.78570 61.54446
+BERT2 80.02698 61.38845 time and increase evaluation metrics. Another work is to use
+BERT3 81.19225 62.63650 these Bert-variants language models such as RoBERTa 15 
+BERT4 80.31376 62.16848
+for transfer learning and comparison of results.
+BERT5 80.54542 62.24648
+BERT6 80.71284 62.01248
+BERT7 79.19508 59.82839
+APPENDIX
+ALBERT1 69.91283 48.90795
+All datasets and source codes related with this study
+are available at 
+Comprehension-Question-Answering-Dataset.
+TABLEV
+COMPARISONOFDATASETS
+REFERENCES
+OurDataset SQuAD2.0
+ 1 Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion
+Paragraph Question-Answer Paragraph Question-Answer
+Jones,AidanN.Gomez,LukaszKaiser,IlliaPolosukhin: AttentionIs
+Train 2,400 14,224 727 130,319
+AllYouNeed ,2017
+Test 301 1,330 56 43,498
+ 2 TungaGu ngo r,CanerDerici(2014),QuestionAnalysisandInformation
+Total 2,701 15,554 783 173,817
+RetrievalforaTurkishQuestionAnsweringSystem
+
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.
+
+ 3 Nagehan Pala Er, Ilyas C ic ekli (2009), Turkish Factoid Question An-
+sweringUsingAnswerPatternMatching
+ 4 ErbugCelebi,BurakGu nel,BaturmanSen(2011),AutomaticQuestion
+AnsweringforTurkishwithPatternParsing
+ 5 PranavRajpurkar,JianZhang,KonstantinLopyrev,PercyLiang(2016),
+SQuAD:100,000 QuestionsforMachineComprehensionofText
+ 6 Pranav Rajpurkar, Jian Zhang, Percy Liang (2018), Know What You
+Don tKnow:UnanswerableQuestionsforSQuAD
+ 7 M. E. Peters, M. Neumann, M. Iyyer, M. Gardner, C. Clark, K. Lee,
+andL.Zettlemoyer.2018.Deepcontextualizedwordrepresentations.In
+NorthAmericanAssociationforComputationalLinguistics(NAACL).
+ 8 C.GemirterandD.Goularas, ATurkishQuestionAnsweringSystem
+Based on Deep Learning Neural Networks , Journal of Intelligent
+Systems:TheoryandApplications,vol.4,no.2,pp.65-75,Sep.2021,
+doi:10.38016 jista.815823
+ 9 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
+BERT: Pre-training of deep bidirectional transformers for language
+understanding.InNAACL-HLT,2019
+ 10 Kevin Clark, Minh-Thang Luong, Quoc V. Le, and Christopher D.
+Manning.2020.ELECTRA:Pretrainingtextencodersasdiscriminators
+ratherthangenerators.InICLR.
+ 11 Yonghui Wu, Mike Schuster, Zhifeng Chen, Quoc V Le, Mohammad
+Norouzi, Wolfgang Macherey, Maxim Krikun, Yuan Cao, Qin Gao,
+Klaus Macherey, et al. Google s neural machine translation system:
+Bridgingthegapbetweenhumanandmachinetranslation.arXivpreprint
+arXiv:1609.08144,2016.
+ 12 Zhenzhong Lan, Mingda Chen, Sebastian Goodman, Kevin Gim-
+pel, Piyush Sharma, and Radu Soricut. ALBERT: A lite bert for
+self-supervised learning of language representations. arXiv preprint
+arXiv:1909.11942,2019.
+ 13 TakuKudoandJohnRichardson.SentencePiece:Asimpleandlanguage
+independentsubwordtokenizeranddetokenizerforneuraltextprocess-
+ing. In Proceedings of the 2018 Conference on Empirical Methods
+in Natural Language Processing: System Demonstrations, pp. 66 71,
+Brussels, Belgium, November 2018. Association for Computational
+Linguistics
+ 14 Schweter, S., 2020. BERTurk - BERT models for Turkish.
+
+ 15 Liu, Y., Ott, M., Goyal, N., Du, J., Joshi, M., Chen, D., Levy, O.,
+Lewis,M.,Zettlemoyer,L., Stoyanov,V.(2019).RoBERTa:ARobustly
+OptimizedBERTPretrainingApproach.ArXiv,abs 1907.11692.
+
+Authorized licensed use limited to: ULAKBIM UASL - Bahcesehir University. Downloaded on May 14,2026 at 16:14:10 UTC from IEEE Xplore. Restrictions apply.

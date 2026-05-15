@@ -1,0 +1,212 @@
+[
+  {
+    "id": "q001",
+    "question": "BERTurk ne zaman yayınlandı?",
+    "ground_truth": "25.03.2020",
+    "category": "factual"
+  },
+  {
+    "id": "q002",
+    "question": "BERTurk hangi dil üzerine eğitilmiştir?",
+    "ground_truth": "Türkçe",
+    "category": "factual"
+  },
+  {
+    "id": "q003",
+    "question": "BERTurk'un mimarisi nedir?",
+    "ground_truth": "BERT",
+    "category": "factual"
+  },
+  {
+    "id": "q004",
+    "question": "AeroGuard ne tür bir sistemdir?",
+    "ground_truth": "Hava sahası güvenlik sistemi",
+    "category": "factual"
+  },
+  {
+    "id": "q005",
+    "question": "AeroGuard hangi teknolojileri kullanır?",
+    "ground_truth": "Radar ve yapay zeka",
+    "category": "factual"
+  },
+  {
+    "id": "q006",
+    "question": "Attention mekanizması ne işe yarar?",
+    "ground_truth": "Giriş dizisindeki önemli kısımlara odaklanmayı sağlar",
+    "category": "conceptual"
+  },
+  {
+    "id": "q007",
+    "question": "Transformer mimarisinde encoder ne yapar?",
+    "ground_truth": "Giriş dizisini temsil vektörlerine dönüştürür",
+    "category": "conceptual"
+  },
+  {
+    "id": "q008",
+    "question": "Self-attention ile cross-attention arasındaki fark nedir?",
+    "ground_truth": "Self-attention aynı dizi içinde, cross-attention farklı diziler arasında ilişki kurar",
+    "category": "conceptual"
+  },
+  {
+    "id": "q009",
+    "question": "THQuAD veri seti ne için kullanılır?",
+    "ground_truth": "Türkçe soru cevaplama",
+    "category": "factual"
+  },
+  {
+    "id": "q010",
+    "question": "THQuAD kaç soru içerir?",
+    "ground_truth": "20.000'den fazla soru",
+    "category": "factual"
+  },
+  {
+    "id": "q011",
+    "question": "LangChain nedir?",
+    "ground_truth": "LLM uygulamaları geliştirmek için framework",
+    "category": "conceptual"
+  },
+  {
+    "id": "q012",
+    "question": "LangChain'de chain ne anlama gelir?",
+    "ground_truth": "Birden fazla LLM çağrısını veya adımı birbirine bağlayan yapı",
+    "category": "conceptual"
+  },
+  {
+    "id": "q013",
+    "question": "LangGraph'ta StateGraph ne işe yarar?",
+    "ground_truth": "Agent'lar arası state akışını yöneten graf yapısı",
+    "category": "conceptual"
+  },
+  {
+    "id": "q014",
+    "question": "LangGraph'ta node nedir?",
+    "ground_truth": "Graf üzerinde bir işlem adımı",
+    "category": "factual"
+  },
+  {
+    "id": "q015",
+    "question": "LangGraph'ta edge nedir?",
+    "ground_truth": "Node'lar arasındaki geçiş bağlantısı",
+    "category": "factual"
+  },
+  {
+    "id": "q016",
+    "question": "Multimodal dil modeli nedir?",
+    "ground_truth": "Hem metin hem görüntü gibi farklı veri tiplerini işleyebilen model",
+    "category": "conceptual"
+  },
+  {
+    "id": "q017",
+    "question": "Multimodal modellerde görüntü nasıl temsil edilir?",
+    "ground_truth": "Patch embedding veya CNN özellik vektörleriyle",
+    "category": "conceptual"
+  },
+  {
+    "id": "q018",
+    "question": "Fine-tuning nedir?",
+    "ground_truth": "Önceden eğitilmiş modelin yeni görev için yeniden eğitilmesi",
+    "category": "conceptual"
+  },
+  {
+    "id": "q019",
+    "question": "Transfer learning ile fine-tuning arasındaki ilişki nedir?",
+    "ground_truth": "Fine-tuning transfer learning'in bir yöntemidir",
+    "category": "conceptual"
+  },
+  {
+    "id": "q020",
+    "question": "DSL nedir?",
+    "ground_truth": "Digital Subscriber Line, telefon hattı üzerinden internet erişimi",
+    "category": "factual"
+  },
+  {
+    "id": "q021",
+    "question": "HFC ağı ne demektir?",
+    "ground_truth": "Hybrid Fiber Coaxial, fiber ve koaksiyel kablo kullanan ağ",
+    "category": "factual"
+  },
+  {
+    "id": "q022",
+    "question": "DSL ve HFC arasındaki temel fark nedir?",
+    "ground_truth": "DSL telefon hattı, HFC koaksiyel kablo kullanır",
+    "category": "conceptual"
+  },
+  {
+    "id": "q023",
+    "question": "ADSL ve VDSL arasındaki fark nedir?",
+    "ground_truth": "VDSL daha yüksek hız sunar, daha kısa mesafelerde çalışır",
+    "category": "conceptual"
+  },
+  {
+    "id": "q024",
+    "question": "BERTurk hangi veri seti üzerinde eğitilmiştir?",
+    "ground_truth": "Türkçe Wikipedia ve diğer Türkçe metin kaynakları",
+    "category": "factual"
+  },
+  {
+    "id": "q025",
+    "question": "Attention mekanizması ve RNN arasındaki fark nedir?",
+    "ground_truth": "Attention tüm diziyi paralel işler, RNN sıralı işler",
+    "category": "conceptual"
+  },
+  {
+    "id": "q026",
+    "question": "LangChain hangi LLM'lerle çalışır?",
+    "ground_truth": "OpenAI, Anthropic, HuggingFace ve diğer LLM sağlayıcıları",
+    "category": "factual"
+  },
+  {
+    "id": "q027",
+    "question": "LangGraph conditional edge ne işe yarar?",
+    "ground_truth": "State'e göre farklı node'lara yönlendirme yapar",
+    "category": "conceptual"
+  },
+  {
+    "id": "q028",
+    "question": "BERTurk ve mBERT arasındaki fark nedir?",
+    "ground_truth": "BERTurk sadece Türkçe, mBERT çok dilli eğitilmiştir",
+    "category": "conceptual"
+  },
+  {
+    "id": "q029",
+    "question": "Transformer mimarisinde positional encoding neden kullanılır?",
+    "ground_truth": "Kelimelerin sıra bilgisini modele vermek için",
+    "category": "conceptual"
+  },
+  {
+    "id": "q030",
+    "question": "THQuAD ve SQuAD arasındaki ilişki nedir?",
+    "ground_truth": "THQuAD SQuAD'ın Türkçe uyarlamasıdır",
+    "category": "multi-hop"
+  },
+  {
+    "id": "q031",
+    "question": "BERTurk THQuAD üzerinde nasıl performans gösterir?",
+    "ground_truth": "BERTurk Türkçe veri seti olan THQuAD'da yüksek F1 skoru elde eder",
+    "category": "multi-hop"
+  },
+  {
+    "id": "q032",
+    "question": "LangChain ve LangGraph birlikte nasıl kullanılır?",
+    "ground_truth": "LangChain LLM çağrıları için, LangGraph agent orchestration için kullanılır",
+    "category": "multi-hop"
+  },
+  {
+    "id": "q033",
+    "question": "Multimodal model eğitiminde hangi veri tipleri kullanılır?",
+    "ground_truth": "Görüntü-metin çiftleri",
+    "category": "factual"
+  },
+  {
+    "id": "q034",
+    "question": "Fiber optik kablo ile koaksiyel kablo arasındaki fark nedir?",
+    "ground_truth": "Fiber ışık sinyali, koaksiyel elektrik sinyali iletir",
+    "category": "conceptual"
+  },
+  {
+    "id": "q035",
+    "question": "ATM ağ teknolojisi ne demektir?",
+    "ground_truth": "Asynchronous Transfer Mode, sabit boyutlu hücreler kullanan ağ teknolojisi",
+    "category": "factual"
+  }
+]

@@ -1,0 +1,299 @@
+Multi-Modal Large Language Models: Combining
+Text, Image, and Audio Understanding
+Burak Ege Kaya Ufuk Karac alı
+2104298 2102988
+Computer Engineering Computer Engineering
+Bahc es ehir University Bahc es ehir University
+Istanbul, Turkey Istanbul, Turkey
+burak.kaya3 bahcesehir.edu.tr ufuk.karacali bahcesehir.edu.tr
+Abstract Recentadvancesinartificialintelligencehaveshifted robotics, a multimodal agent can combine visual perception
+the focus from unimodal systems, which process a single data withnaturallanguageinstructionstonavigateandinteractwith
+type, toward multimodal large language models (MLLMs) ca-
+its environment. In consumer applications, systems such as
+pable of jointly understanding text, images, and audio. This
+GPT-4o demonstrate real-time reasoning across text, vision,
+paper provides a comprehensive overview of the architectural
+foundations that enable such models, including modality-specific and voice within a single conversational interface.
+encoders, cross-modal attention mechanisms, and unified trans- The architectural foundations that make this possible rep-
+former backbones. We examine the training pipelines used to resent a significant departure from earlier deep learning
+align representations across modalities and survey landmark
+paradigms.Ratherthantrainingisolatedmodelsonsingledata
+models including CLIP, LLaVA, GPT-4o, Gemini, and Image-
+streams,MLLMsemploymodality-specificencoderstoextract
+Bind. Furthermore, we discuss the key challenges that remain
+open in the field, such as computational cost, modality align- representations from each input type, fusion mechanisms to
+ment, and hallucination, and outline promising directions for alignandintegratetheserepresentationsintoasharedsemantic
+future research. Our analysis highlights that multimodal LLMs space, and large pretrained transformer backbones to generate
+represent a fundamental step toward more general and human-
+coherent outputs. The training pipelines for such systems
+like artificial intelligence systems.
+are equally complex, typically involving multiple stages of
+IndexTerms multimodallargelanguagemodels,cross-modal
+attention,vision-languagemodels,audio-languagemodels,trans- pretraining, contrastive alignment, and instruction tuning.
+former architecture This paper provides a structured overview of the key
+concepts, architectures, models, and challenges that define
+I. INTRODUCTION
+the current landscape of multimodal large language models.
+Thehistoryofartificialintelligencehaslargelybeendefined Section II reviews the foundational work that enabled mul-
+by specialization. Early systems were designed to excel at a timodal learning. Section III examines the core architectural
+single task: a model that recognized images could not process components in detail. Section IV surveys and compares land-
+text,andamodelthattranscribedspeechhadnounderstanding mark models in the field. Section V discusses the principal
+of visual context. While this narrow focus enabled significant challenges and outlines directions for future research, and
+progresswithinindividualdomains,itsimultaneouslyimposed Section VI concludes the paper.
+afundamentalceilingonwhatmachinescouldunderstandand
+reasonabout.Humancognition,bycontrast,isinherentlymul-
+II. BACKGROUNDANDRELATEDWORK
+timodal.Weperceivetheworldthroughasimultaneousstream
+of sight, sound, language, and touch, and our understanding The development of multimodal LLMs was enabled by
+of any given situation depends on the rich interplay between threefoundationaladvances.TheTransformerarchitecture 1 ,
+these channels. by replacing recurrence with attention, provided a modality-
+This gap between human perception and machine intelli- agnostic backbone equally applicable to text, image patches,
+gence has motivated a new generation of models known as and audio spectrograms. Building on this, the Vision Trans-
+MultimodalLargeLanguageModels(MLLMs).Byintegrating former (ViT) 2 unified image and text representations by
+multiple input modalities, most notably text, images, and treating image patches as tokens, while CLIP 3 demon-
+audio, within a unified architecture, these systems aim to strated that contrastive training on 400 million image-text
+move beyond the limitations of unimodal approaches and pairs could align vision and language in a shared embedding
+develop a more holistic understanding of the world. The space, enabling zero-shot image classification. In the audio
+practical implications of this shift are substantial. In clinical domain, Whisper 4 established robust speech recognition by
+settings, a multimodal system can simultaneously analyze a convertingwaveformstolog-melspectrogramsandprocessing
+medical image, interpret accompanying physician notes, and them through a Transformer encoder, providing a compatible
+process a patient s spoken symptoms to support diagnosis. In audio encoder for multimodal pipelines.
+
+III. MULTIMODALLLMARCHITECTURE Late fusion processes each modality independently through
+its full encoder stack and combines the resulting high-level
+The architecture of a multimodal large language model
+representations only at the final decision stage. This approach
+can be understood as a three-stage pipeline: independent
+is modular and easy to implement, but the lack of interac-
+encoding of each input modality, alignment and fusion of the
+tion between modalities during processing limits the model s
+resulting representations into a shared semantic space, and
+ability to capture fine-grained cross-modal dependencies.
+unified generation through a large pretrained language model
+Cross-modal attention, the approach adopted by the most
+backbone. Each of these stages introduces distinct design
+capable modern systems, allows representations from one
+choices that significantly affect the capability, efficiency, and
+modality to directly attend to representations from another at
+generalizability of the resulting system 5 .
+intermediateprocessingstages 5 .Inthestandardformulation,
+A. Modality-Specific Encoders query vectors are derived from one modality while key and
+The first stage of any multimodal architecture is the inde- value vectors are derived from another, enabling the model
+pendent extraction of meaningful representations from each to learn which elements of one modality are most relevant
+input type. Because text, images, and audio have fundamen- to specific elements of another. This mechanism underlies the
+tally different structural properties, each modality requires strong performance of models such as GPT-4o and Gemini,
+a dedicated encoder designed to capture its characteristic andhasbecomethestandarddesignchoiceforstate-of-the-art
+patterns. multimodal architectures.
+Fortext,standardTransformer-basedencodersprocessinput A closely related approach, adopted by LLaVA 7 , uses
+as a sequence of subword tokens, each mapped to a dense a simpler projection-based fusion strategy in which visual
+embedding vector. The self-attention mechanism then allows embeddings are mapped into the text token space through
+each token to attend to all others in the sequence, building up a lightweight linear projection layer and then concatenated
+rich contextual representations that capture both local syntax directly with text tokens before being fed into the language
+and long-range semantic dependencies 1 . model.
+For images, the Vision Transformer (ViT) architecture pro-
+C. Unified LLM Backbone and Training Pipeline
+vides a natural bridge to the Transformer framework 2 .
+Following fusion, the combined multimodal representation
+An input image is divided into a grid of fixed-size patches,
+is processed by a large pretrained language model backbone,
+typically16x16pixels,andeachpatchislinearlyprojectedinto
+which generates outputs autoregressively by predicting one
+an embedding vector. This patch-based tokenization strategy
+tokenatatime.Thebackboneistypicallyapowerfuldecoder-
+means that visual features are represented in the same format
+only Transformer such as LLaMA or PaLM, chosen for its
+astexttokens,makingsubsequentcross-modaloperationscon-
+strong generalization capabilities.
+siderably more straightforward. In practice, the CLIP vision
+Training a multimodal LLM from scratch is prohibitively
+encoder 3 is the most widely adopted choice for this role,
+expensive.Consequently,mostmodernsystemsadoptamulti-
+as its contrastive pretraining on image-text pairs ensures that
+stage training pipeline 5 . In the first stage, the modality-
+the resulting visual embeddings are already well-aligned with
+specific encoders are pretrained independently on large uni-
+language representations.
+modal datasets. In the second stage, cross-modal alignment is
+For audio, the dominant approach treats speech signals as
+performedusingcontrastiveobjectivessuchasthoseemployed
+two-dimensionalvisualartifacts.Arawaudiowaveformisfirst
+byCLIP 3 ,tobringtheembeddingspacesofdifferentmodal-
+converted into a log-mel spectrogram through a Short-Time
+ities into correspondence. In the third and final stage, the full
+Fourier Transform, producing a time-frequency representation
+model is fine-tuned on multimodal instruction-following data.
+thatcapturestheacousticstructureofspeech.Thisspectrogram
+LLaVA 7 exemplifies this pipeline, using GPT-4-generated
+isthenprocessedbyaTransformerencoder,asintheWhisper
+visual question-answering data in the final stage to produce a
+architecture 4 . The resulting audio embeddings carry rich
+model capable of rich visual dialogue. The overall pipeline is
+phonetic and semantic information and can be projected into
+illustrated in Fig. 1.
+thesamerepresentationalspaceastextandimageembeddings.
+B. Fusion Mechanisms Inputs Textinput Imageinput Audioinput
+Once each modality has been independently encoded, the Encoders Te T x ra t n e sf n o c rm od er er Vis V io iT n e C n L c I o P der Aud W io h e is n pe c r oder
+central challenge is to combine these representations in a way
+that preserves modality-specific information while enabling Fusion Fusion S hare c d r e o m ss b - e m ddi o n d g a s l pa a ce ttention
+the model to reason across modality boundaries. Three broad
+strategies have been explored in the literature 6 . LLM De L co L de M r-on b ly ac tr k an b s o fo n rm e er
+Early fusion combines raw or minimally processed repre- Output Textoutput
+sentations from multiple modalities before any deep process-
+Fig. 1. Architecture of a multimodal large language model. Each input
+ingoccurs.Whileconceptuallysimple,thisapproachstruggles
+modality is processed by a dedicated encoder before being integrated via
+to leverage the specialized inductive biases that modality- cross-modal attention and passed to a unified LLM backbone for output
+specific encoders provide. generation.
+
+IV. KEYMODELSANDCOMPARATIVEANALYSIS D. Gemini
+The theoretical foundations established in the preceding Google s Gemini family of models, introduced in Decem-
+sectionshavebeentranslatedintoaseriesoflandmarkmodels ber 2023, was designed from the ground up as a natively
+that define the current state of the art in multimodal large multimodal system, trained jointly on interleaved sequences
+language models. Each of these systems represents a distinct of text, images, audio, and video 9 . The Gemini family
+setofdesignchoicesandtrade-offs,andtogethertheyillustrate consists of three size variants: Ultra, Pro, and Nano, targeting
+the rapid pace at which the field has advanced since 2021. applications ranging from complex reasoning tasks to on-
+device deployment. Gemini Ultra became the first model to
+A. CLIP surpass human expert performance on the MMLU benchmark
+with a score exceeding 90 . The native multimodal training
+Although not a generative model in the modern sense,
+approach adopted by Gemini, as contrasted with the post-hoc
+CLIPoccupiesafoundationalroleinthemultimodallandscape
+fusion strategies used by earlier systems, is increasingly seen
+that warrants its inclusion in any comparative account 3 .
+as the preferred paradigm for building the next generation of
+Trained by OpenAI on 400 million image-text pairs using
+capable multimodal models.
+a contrastive objective, CLIP demonstrated for the first time
+that a model trained purely on naturally occurring web data E. ImageBind
+couldachievecompetitivezero-shotperformanceacrossawide
+ImageBind, introduced by Girdhar et al. at Meta AI in
+range of vision tasks. Its vision encoder has since become the
+2023, takes a fundamentally different approach to multimodal
+standard visual backbone for virtually all downstream multi-
+learning by targeting six distinct modalities simultaneously:
+modal architectures. CLIP s most significant contribution was
+images, text, audio, depth, thermal, and inertial measurement
+its demonstration that image and text representations could be
+unit (IMU) data 10 . Rather than training on paired data
+aligned in a shared embedding space at scale, establishing the
+across all possible combinations of modalities, ImageBind
+alignment paradigm that underpins all subsequent work.
+exploits the observation that images naturally co-occur with
+eachoftheotherfivemodalitiesinreal-worlddata.Bytraining
+B. LLaVA
+each modality encoder to align its representations with image
+LLaVA (Large Language and Vision Assistant), introduced
+embeddingsusingacontrastiveobjective,ImageBindachieves
+byLiuetal.in2023,representsthefirstwidelyadoptedopen-
+emergent alignment across all modality pairs, including those
+source multimodal model to combine a CLIP vision encoder
+never seen together during training. This emergent cross-
+with a large language model backbone in an end-to-end
+modal alignment enables novel zero-shot applications includ-
+trainable framework 7 . The architecture connects the CLIP
+ing cross-modal retrieval and audio-driven image generation.
+ViT encoder to the LLaMA language model through a simple
+linear projection layer, which maps visual patch embeddings F. Comparative Summary
+into the text token space. Crucially, LLaVA s training data Table I summarizes the key characteristics of the models
+was generated using GPT-4 prompted with image captions surveyed in this section.
+and bounding box annotations, producing a rich set of visual
+instruction-following examples at a fraction of the cost of
+TABLEI
+human annotation. Despite its architectural simplicity, LLaVA COMPARISONOFKEYMULTIMODALLLMS
+achieved 85.1 of GPT-4 s performance on a synthetic visual
+Model Modalities Fusion Year Open
+instruction-following benchmark. Its open-source availability
+CLIP Image,Text Contrastive 2021 Yes
+has made it the most widely studied multimodal model in LLaVA Image,Text Projection 2023 Yes
+academic research. GPT-4o Image,Text,Audio Cross-Attn 2023 No
+Gemini Image,Text,Audio, Native 2023 No
+Video
+C. GPT-4o
+ImageBind 6Modalities Contrastive 2023 Yes
+TheGPT-4TechnicalReport,publishedbyOpenAIin2023,
+introduced GPT-4 as a large-scale multimodal model capable
+of accepting both image and text inputs and producing text V. CHALLENGESANDFUTUREDIRECTIONS
+outputs 8 . GPT-4 demonstrated human-level performance Despite the remarkable progress documented in the pre-
+acrossawiderangeofprofessionalandacademicbenchmarks, ceding sections, multimodal large language models remain
+including passing a simulated bar examination in the top 10 subject to a number of significant limitations that constrain
+percentile. Its successor, GPT-4o, extended this capability to their reliability, scalability, and broader applicability 5 .
+nativeaudiounderstandingandreal-timespokendialogue,pro-
+A. Multimodal Hallucination
+cessing text, images, and audio within a single unified model.
+This architectural integration allows GPT-4o to perceive and Perhaps the most pressing challenge in the deployment of
+respondtoemotionaltone,backgroundacoustics,andprosodic multimodal LLMs is the phenomenon of hallucination, in
+featuresinspeech,capabilitiesthatarelostwhenaudioisfirst which a model generates outputs that are fluent and internally
+transcribed to text before being processed. coherent but factually inconsistent with the provided visual or
+
+audio input. This problem arises in part because the language multimodal hallucination, representation gaps, and computa-
+model backbone has strong prior beliefs about what objects tional cost, point toward natively multimodal training, tighter
+typicallyco-occurinascene,andthesepriorscanoverridethe cross-modal alignment, and more efficient architectures as
+evidenceprovidedbythevisualencoderwhenthetwosources the most promising directions for future work. By bridging
+of information conflict. Addressing multimodal hallucination language,vision,andaudiowithinunifiedsystems,multimodal
+isanactiveareaofresearch,withproposedsolutionsincluding LLMs represent a fundamental step toward more general
+contrastive decoding strategies, preference optimization meth- artificial intelligence.
+ods, and richer instruction tuning datasets 6 .
+REFERENCES
+B. Modality Alignment and Representation Gap
+ 1 A.Vaswani,N.Shazeer,N.Parmar,J.Uszkoreit,L.Jones,A.N.Gomez,
+A fundamental challenge in multimodal learning is the L. Kaiser, and I. Polosukhin, Attention is all you need, in Advances
+inNeuralInformationProcessingSystems,vol.30,2017.
+representation gap between different modalities. Even after
+ 2 A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai,
+contrastive pretraining on large image-text datasets, the em- T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly,
+bedding spaces of vision and language encoders are not J.Uszkoreit,andN.Houlsby, Animageisworth16x16words:Trans-
+formersforimagerecognitionatscale, inInternationalConferenceon
+perfectly aligned. Subtle misalignments mean that the model
+LearningRepresentations,2021.
+may correctly process each modality in isolation while fail- 3 A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal,
+ing to integrate them coherently in cases that require fine- G.Sastry,A.Askell,P.Mishkin,J.Clark,G.Krueger,andI.Sutskever,
+ Learning transferable visual models from natural language supervi-
+grained cross-modal reasoning. More sophisticated alignment
+sion, inProceedingsofthe38thInternationalConferenceonMachine
+techniques such as Q-Former modules represent promising Learning,2021,pp.8748 8763.
+steps forward. 4 A. Radford, J. W. Kim, T. Xu, G. Brockman, C. McLeavey, and
+I. Sutskever, Robust speech recognition via large-scale weak super-
+C. Computational Cost and Scalability vision, arXivpreprintarXiv:2212.04356,2022.
+ 5 S.Yin,C.Fu,S.Zhao,K.Li,X.Sun,T.Xu,andE.Chen, Asurveyon
+Training and deploying multimodal LLMs at scale re- multimodal large language models, National Science Review, vol. 11,
+quires substantially more computational resources than their no.12,p.nwae403,2024.
+ 6 J. Wu, W. Gan, Z. Chen, S. Wan, and P. S. Yu, Multimodal large
+unimodal counterparts. At inference time, processing long
+languagemodels:Asurvey, inIEEEInternationalConferenceonBig
+sequences of visual tokens alongside text tokens leads to Data,2023,pp.1 10.
+quadratic growth in attention computation. Efficient architec- 7 H. Liu, C. Li, Q. Wu, and Y. J. Lee, Visual instruction tuning, in
+AdvancesinNeuralInformationProcessingSystems,2023.
+turesthatreducevisualtokencountthroughpruningrepresent
+ 8 OpenAI, GPT-4 technical report, arXiv preprint arXiv:2303.08774,
+an important research direction 11 . 2023.
+ 9 GeminiTeam,Google, Gemini:Afamilyofhighlycapablemultimodal
+D. Future Directions models, arXivpreprintarXiv:2312.11805,2023.
+ 10 R. Girdhar, A. El-Nouby, Z. Liu, M. Singh, K. V. Alwala, A. Joulin,
+Looking ahead, several research directions hold particular
+and I. Misra, ImageBind: One embeddingspace to bind themall, in
+promise. The move toward natively multimodal training, as IEEE CVF Conference on Computer Vision and Pattern Recognition,
+demonstratedbyGemini 9 ,islikelytobecomethedominant 2023.
+ 11 Y.Jin,J.Li,Y.Liu,T.Gu,K.Wu,Z.Jiang,M.He,B.Zhao,X.Tan,
+paradigm as it avoids the representation gaps that arise from
+Z. Gan, Y. Wang, C. Wang, and L. Ma, Efficient multimodal large
+post-hoc fusion. The integration of multimodal LLMs with languagemodels:Asurvey, arXivpreprintarXiv:2405.10739,2024.
+embodied agents represents a compelling long-term frontier
+thatconnectsmultimodallanguageunderstandingtoreal-world
+decision-making. Additionally, the scarcity of high-quality
+three-modal datasets remains a key bottleneck; synthetically
+generated instruction-following data, as pioneered by LLaVA
+ 7 , offers a partial solution, but more robust approaches
+are needed. Finally, the emergence of highly capable recent
+modelssuggeststhatthegapbetweenclosedandopensystems
+will continue to narrow, broadening access to multimodal
+reasoning capabilities across the research community.
+VI. CONCLUSION
+This paper has presented a structured overview of mul-
+timodal large language models, examining the architectural
+components that enable cross-modal reasoning, including
+modality-specific encoders, fusion mechanisms, and unified
+transformer backbones. We surveyed landmark models span-
+ning CLIP s contrastive alignment paradigm, LLaVA s open-
+source projection-based fusion, GPT-4o and Gemini s native
+multimodal architectures, and ImageBind s six-modality em-
+beddingspace.Theprincipalchallengesthatremain,including
