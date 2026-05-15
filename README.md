@@ -224,7 +224,7 @@ AgentBench-TR/
 ## Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AgentBench-TR.git
+git clone https://github.com/burakkeynz/AgentBench-TR.git
 cd AgentBench-TR
 cp .env.example .env
 # Add OPENAI_API_KEY to .env
